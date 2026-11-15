@@ -14,7 +14,6 @@
 	} from '#lib/stores/page-transition.svelte.js';
 	import { hasStoredLocation, storedTheme } from '#lib/stores/settings.js';
 
-	import { syncThemeColor } from '#lib/utils/theme-color.js';
 	import {
 		canStartViewTransition,
 		startViewTransition,
@@ -59,7 +58,6 @@
 			const dark = theme === 'dark' || (theme === 'system' && mq.matches);
 			const paint = () => {
 				root.classList.toggle('dark', dark);
-				syncThemeColor(dark);
 			};
 
 			// The very first application is just painting the stored theme - only
