@@ -17,6 +17,49 @@
 	// update was already detected: reloading without network would tear down a
 	// working cached app for nothing. It reappears once the connection is back.
 	let show = $derived(updated.current && online.current === true && !dismissed);
+
+	// The deploy is known: fetch the new service worker now, so it has installed
+	// by the time "Reload" is clicked.
+	$effect(() => {
+		if (!updated.current || !('serviceWorker' in navigator)) return;
+		navigator.serviceWorker
+			.getRegistration()
+			.then((registration) => registration?.update())
+			.catch(() => {});
+	});
+
+	/** Resolves once `fn` has run or `ms` passed: an update must never block the reload. */
+	const settle = (ms: number, fn: (done: () => void) => void) =>
+		new Promise<void>((resolve) => {
+			setTimeout(resolve, ms);
+			fn(resolve);
+		});
+
+	async function reload() {
+		try {
+			const registration = await navigator.serviceWorker?.getRegistration();
+			const installing = registration?.installing;
+			if (installing) {
+				await settle(3000, (done) =>
+					installing.addEventListener('statechange', () => {
+						if (installing.state !== 'installing') done();
+					})
+				);
+			}
+			// The new worker waits while old tabs use the old one (see
+			// src/service-worker/index.ts); activate it so the old cache goes away.
+			const waiting = registration?.waiting;
+			if (waiting) {
+				await settle(3000, (done) => {
+					navigator.serviceWorker.addEventListener('controllerchange', done, { once: true });
+					waiting.postMessage({ type: 'SKIP_WAITING' });
+				});
+			}
+		} catch {
+			// no service worker: a plain reload is the whole update
+		}
+		location.reload();
+	}
 </script>
 
 {#if show}
@@ -37,7 +80,7 @@
 			<Button
 				variant="outline"
 				class="h-8 shrink-0 gap-2 self-start px-3 text-sm sm:self-auto"
-				onclick={() => location.reload()}
+				onclick={reload}
 			>
 				<RefreshCwIcon class="size-3.5" />
 				{m.update_reload()}
