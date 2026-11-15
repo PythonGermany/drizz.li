@@ -51,14 +51,7 @@ self.addEventListener('install', (event) => {
 	event.waitUntil(
 		(async () => {
 			const cache = await caches.open(CACHE);
-			// Unfingerprinted files (the manifest, icons) keep their URL across
-			// builds, so the HTTP cache may still hold the previous build's copy.
-			// Revalidate them, or that stale copy is precached for this build.
-			await cache.addAll(
-				PRECACHE.map((path) =>
-					path.startsWith('/_app/immutable/') ? path : new Request(path, { cache: 'no-cache' })
-				)
-			);
+			await cache.addAll(PRECACHE);
 			// the dev server answers every path itself and has no 404.html
 			if (!dev) await cacheShell(cache);
 		})()
