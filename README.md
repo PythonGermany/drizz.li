@@ -53,6 +53,7 @@ src/lib/services/    weather.ts - every Open-Meteo request goes through here
 src/lib/stores/      persisted settings (location, model, units, theme, ...)
 src/lib/utils/       date/location/URL helpers, maps domain mapping
 src/routes/weather/  the forecast pages
+src/service-worker/  offline app shell (PWA)
 static/data/cities/  GeoNames city tiles (pulled from R2, gitignored)
 static/images/       country flags and weather icons (pulled from R2, gitignored)
 worker/              the Cloudflare Worker: /api/geo, and nothing else
@@ -198,6 +199,16 @@ one-year immutable `Cache-Control`. Without it Workers serves every asset as
 `public, max-age=0, must-revalidate`, so each page load spends a conditional
 request per file to be told nothing changed. HTML deliberately keeps the
 revalidating default.
+
+Service worker (`src/service-worker/`):
+
+| Request                              | Handling                                |
+| ------------------------------------ | --------------------------------------- |
+| Navigations                          | Network first, `404.html` shell offline |
+| `/_app/immutable/*`, favicon, icons  | Precached per build, cache first        |
+| `/_app/version.json`, `/api/*`       | Network only, never cached              |
+| Cross-origin (Open-Meteo APIs, maps) | Not intercepted                         |
+| `/service-worker.js` itself          | `Cache-Control: no-cache` (`_headers`)  |
 
 ### 4. Cross-origin isolation (SharedArrayBuffer for the embedded map)
 
