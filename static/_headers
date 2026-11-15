@@ -16,6 +16,8 @@
 # visit pays nothing, short enough that a replaced flag or city tile lands.
 /images/*
   Cache-Control: public, max-age=86400
+/icons/*
+  Cache-Control: public, max-age=86400
 /data/*
   Cache-Control: public, max-age=86400
 
