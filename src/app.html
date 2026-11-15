@@ -11,18 +11,22 @@
 		<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180.png" />
 		<link rel="manifest" href="/app.webmanifest" />
 		<meta name="apple-mobile-web-app-title" content="Drizz.li" />
-		<meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)" />
-		<meta name="theme-color" content="#2b2826" media="(prefers-color-scheme: dark)" />
+		<!-- status bar colour = header colour; values mirror THEME_COLOR in
+		     src/lib/utils/theme-color.ts -->
+		<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#1b150f" media="(prefers-color-scheme: dark)" />
 		<script>
 			// apply the persisted theme before first paint to avoid a flash
 			try {
 				var theme = JSON.parse(localStorage.getItem('theme') || '"system"');
-				if (
+				var dark =
 					theme === 'dark' ||
-					(theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
-				) {
-					document.documentElement.classList.add('dark');
-				}
+					(theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+				if (dark) document.documentElement.classList.add('dark');
+				// a theme picked in the settings overrides the media-scoped defaults
+				document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+					meta.content = dark ? '#1b150f' : '#ffffff';
+				});
 			} catch (e) {
 				/* ignore */
 			}
