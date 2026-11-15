@@ -1,0 +1,6 @@
+# static-web-server config for the Docker image. The Dockerfile appends the
+# response headers from static/_headers (docker/headers.awk).
+[general]
+root = "/public"
+# adapter-static's SPA fallback, served like not_found_handling in wrangler.jsonc
+page-fallback = "/public/404.html"

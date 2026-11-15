@@ -1,0 +1,8 @@
+# .git stays in: the build reads the commit from it
+node_modules
+build
+.svelte-kit
+.wrangler
+.env
+.env.*
+!.env.example
