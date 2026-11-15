@@ -22,3 +22,8 @@
 /app.webmanifest
   Content-Type: application/manifest+json
   Cache-Control: public, max-age=86400
+
+# Revalidated on every update check, so a deploy reaches installed apps on
+# their next visit instead of after the HTTP cache expires.
+/service-worker.js
+  Cache-Control: no-cache

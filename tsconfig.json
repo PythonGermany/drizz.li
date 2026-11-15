@@ -5,5 +5,7 @@
 		"sourceMap": true,
 		"strict": true
 	},
-	"include": ["src", "vite.config.ts"]
+	"include": ["src", "vite.config.ts"],
+	// typed against WebWorker instead of the DOM, see src/service-worker/tsconfig.json
+	"exclude": ["src/service-worker"]
 }
