@@ -131,6 +131,12 @@ npm run build
 
 `npm run preview` serves the production build locally.
 
+Build-time variables (also read by `npm run dev`):
+
+| Variable      | Default                       | Purpose                                                   |
+| ------------- | ----------------------------- | --------------------------------------------------------- |
+| `MAPS_ORIGIN` | `https://maps.open-meteo.com` | Map viewer embedded on `/weather/maps/` (open-meteo/maps) |
+
 The build prerenders the static pages and the city pages listed in
 `src/routes/weather/locations/city-names100.json` (base locale only, for every
 per-location route). Everything else - unlisted cities, coordinate routes,

@@ -128,6 +128,13 @@ const buildVersion = () => {
 	}
 };
 
+// The map viewer embedded on /weather/maps/ (open-meteo/maps). Baked in at
+// build time like everything else in a static build; point MAPS_ORIGIN at a
+// self-hosted instance or a local maps dev server (http://localhost:5173, with
+// drizzli on another port). Reduced to the bare origin, since the page compares
+// it against MessageEvent.origin; a malformed value fails the build.
+const mapsOrigin = new URL(process.env.MAPS_ORIGIN || 'https://maps.open-meteo.com').origin;
+
 // Every locale carries its own path prefix, English included, so a URL always
 // says which language it is in. `trailingSlash: 'always'` (see routes/+layout.ts)
 // means the patterns have to match both `/de/weather/week/` and `/de`.
@@ -232,6 +239,10 @@ export default defineConfig({
 		}),
 		viteServerConfig()
 	],
+
+	define: {
+		__MAPS_ORIGIN__: JSON.stringify(mapsOrigin)
+	},
 
 	test: {
 		expect: { requireAssertions: true },

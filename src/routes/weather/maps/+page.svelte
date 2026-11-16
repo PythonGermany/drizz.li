@@ -51,10 +51,8 @@
 		iframeEl?.contentWindow?.postMessage(message, MAPS_ORIGIN);
 	};
 
-	// Local maps dev server (open-meteo/maps); production: https://maps.open-meteo.com
-	// Run drizzli on a different port so the map keeps 5173 to itself.
-	// const MAPS_ORIGIN = 'http://localhost:5173';
-	const MAPS_ORIGIN = 'https://maps.open-meteo.com';
+	// Set at build time from MAPS_ORIGIN (see vite.config.ts)
+	const MAPS_ORIGIN = __MAPS_ORIGIN__;
 
 	const MAP_HASH_RE = /^#\d+(\.\d+)?\/-?\d+(\.\d+)?\/-?\d+(\.\d+)?/;
 
