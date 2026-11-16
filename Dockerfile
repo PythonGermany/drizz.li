@@ -5,6 +5,9 @@
 # unless BuildKit is told to keep it:
 #   docker build --build-arg BUILDKIT_CONTEXT_KEEP_GIT_DIR=1 https://github.com/PythonGermany/drizz.li.git#deploy
 #
+# Build-time variables (see README) are passed the same way, e.g.
+#   --build-arg MAPS_ORIGIN=https://maps.example.com
+#
 # Base images are pinned by version and digest and updated by hand.
 FROM node:26.13.1@sha256:e18c3ccdf7d71619990b0e85639f506e2028a95410999cab24cc373cbd10e0ac AS build
 WORKDIR /src
@@ -12,6 +15,7 @@ COPY . .
 # The build version comes from the commit (vite.config.ts); SvelteKit's update
 # check and the service worker's cache name depend on it
 RUN git rev-parse HEAD
+ARG MAPS_ORIGIN
 RUN npm ci && npm run build
 RUN awk -f docker/headers.awk static/_headers >> docker/sws.toml
 
