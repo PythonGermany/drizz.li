@@ -1,6 +1,9 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 declare global {
+	/** Origin of the embedded map viewer, injected by `define` in vite.config.ts */
+	const __MAPS_ORIGIN__: string;
+
 	namespace App {
 		// interface Error {}
 		// interface Locals {}
